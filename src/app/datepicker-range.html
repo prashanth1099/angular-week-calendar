@@ -1,8 +1,7 @@
 <p>Example of the range selection</p>
 
-<ngb-datepicker #dp (dateSelect)="selectWeek($event)" [displayMonths]="1" [dayTemplate]="t"
-  [firstDayOfWeek]=firstDayOfWeek
-  [showWeekNumbers]=showWeekNumbers>
+<!--<ngb-datepicker #dp (dateSelect)="selectWeek($event)" [displayMonths]="1" [dayTemplate]="t"
+  [firstDayOfWeek]=firstDayOfWeek [showWeekNumbers]=showWeekNumbers>
 </ngb-datepicker>
 
 <ng-template #t let-date let-focused="focused" let-disabled="disabled">
@@ -14,7 +13,45 @@
         (mouseleave)="hoveredDate = null">
     {{ date.day }}
   </span>
-</ng-template>
+</ng-template> -->
+
+<form class="form-inline">
+  <div class="form-group hidden">
+    <div class="input-group">
+      <input name="datepicker"
+             class="form-control"
+             ngbDatepicker
+             #datepicker="ngbDatepicker"
+             [autoClose]="'outside'"
+             (dateSelect)="selectWeek($event)"
+             [displayMonths]="1"
+             [dayTemplate]="t"
+             [startDate]="fromDate!"
+             [firstDayOfWeek]=firstDayOfWeek
+             [showWeekNumbers]=showWeekNumbers
+             tabindex="-1" style="display: none">
+      <ng-template #t let-date let-focused="focused" let-disabled="disabled">
+        <span class="custom-day"
+              [class.focused]="focused"
+              [class.range]="isRange(date)"
+              [class.faded]="isHovered(date) || isInside(date)"
+              (mouseenter)="hoveredDate = date"
+              (mouseleave)="hoveredDate = null">
+          {{ date.day }}
+        </span>
+      </ng-template>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="input-group">
+      <input #dpFromDate
+             class="form-control" placeholder="yyyy-mm-dd"
+             name="dpFromDate"
+             [value]="weekNumbers"
+             (click)="datepicker.toggle()">
+    </div>
+  </div>
+</form>
 
 <hr>
 
