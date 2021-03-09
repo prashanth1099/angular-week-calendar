@@ -40,9 +40,10 @@ export class NgbdDatepickerRange {
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
   firstDayOfWeek: number = 1;
-  selectMultipleWeeks: boolean = true;
+  selectMultipleWeeks: boolean = false;
   counter: number = 0;
   showWeekNumbers: boolean = true;
+  weekNumbers: string[] = [];
 
   constructor(private calendar: NgbCalendar) {
     this.fromDate = calendar.getToday();
@@ -61,7 +62,7 @@ export class NgbdDatepickerRange {
       // Get the weekDayNumber and reduce the number to select the date
       // if zero(sunday) then reduce 0
       this.toDate = this.constructEndDate(dateObject)(constructDate);
-      //this.weekNumberGenerator().next();
+      this.weekNumberGenerator();
     } else {
       if (!this.fromDate && !this.toDate) {
         //this.fromDate = date;
@@ -81,16 +82,39 @@ export class NgbdDatepickerRange {
         this.toDate = null;
         this.fromDate = date;
       }
-      //this.weekNumberGenerator();
+      this.weekNumberGenerator();
     }
   }
 
   weekNumberGenerator() {
-    console.log(this.fromDate);
-    let startDate = this.fromDate;
-    let endDate = this.toDate;
+    
     let dates = [];
-    console.log(dates);
+    let week = [];
+
+    let startDate = NgbDate.from(this.fromDate);
+    let endDate = NgbDate.from(this.toDate);
+    
+    week.push(startDate);
+    while((endDate != null) && (!(startDate.equals(endDate))))
+    {    
+       let date = this.calendar.getNext(startDate, "d", 1);
+       startDate = date;
+       week.push(date);    
+       if(week.length == 7)
+       {
+          dates.push(week);
+          week = [];          
+       }   
+    };
+
+    this.weekNumbers = []
+    if(dates.length > 0)
+    {
+      for(let date of dates)
+      {
+          this.weekNumbers.push("week " + this.calendar.getWeekNumber(date, this.firstDayOfWeek)) ;
+      } 
+    } 
   }
 
   constructStartDate(date: Date) {
