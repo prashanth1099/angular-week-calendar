@@ -203,6 +203,6 @@ export class NgbdDatepickerRange {
   {
     this.fromDate = this.calendar.getNext(this.fromDate, "d", this.calendar.getDaysPerWeek());
     this.toDate = this.calendar.getNext(this.fromDate, "d", this.calendar.getDaysPerWeek()-1);
-    /this.weekNumberGenerator();
+    //this.weekNumberGenerator();
   }
 }
