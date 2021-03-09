@@ -44,11 +44,18 @@
   </div>
   <div class="form-group">
     <div class="input-group">
+      <div class="left">
+        <button type="button" aria-label="Next month" title="Next month" class="btn btn-link ngb-dp-arrow-btn" (click)=previousWeek()>Previous
+          </button>
+      </div>
       <input #dpFromDate
              class="form-control" placeholder="yyyy-mm-dd"
              name="dpFromDate"
              [value]="weekNumbers"
              (click)="datepicker.toggle()">
+      <div class="right">
+        <button type="button" aria-label="Next month" title="Next month" class="btn btn-link ngb-dp-arrow-btn" (click)=nextWeek()>Next</button>
+      </div>
     </div>
   </div>
 </form>

@@ -191,4 +191,18 @@ export class NgbdDatepickerRange {
       this.isHovered(date)
     );
   }
+
+  previousWeek()
+  {
+    this.fromDate = this.calendar.getPrev(this.fromDate, "d", this.calendar.getDaysPerWeek());
+    this.toDate = this.calendar.getPrev(this.fromDate, "d", this.calendar.getDaysPerWeek()-1);
+    this.weekNumberGenerator();
+  }
+
+  nextWeek()
+  {
+    this.fromDate = this.calendar.getNext(this.fromDate, "d", this.calendar.getDaysPerWeek());
+    this.toDate = this.calendar.getNext(this.fromDate, "d", this.calendar.getDaysPerWeek()-1);
+    this.weekNumberGenerator();
+  }
 }
