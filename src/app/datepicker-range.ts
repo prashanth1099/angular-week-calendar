@@ -81,7 +81,7 @@ export class NgbdDatepickerRange {
         this.toDate = null;
         this.fromDate = date;
       }
-      this.weekNumberGenerator();
+      //this.weekNumberGenerator();
     }
   }
 
@@ -90,12 +90,6 @@ export class NgbdDatepickerRange {
     let startDate = this.fromDate;
     let endDate = this.toDate;
     let dates = [];
-    while(!(startDate.equals(endDate)))
-    {
-       let date = this.calendar.getNext(startDate, "d", 1);
-       startDate = date;
-       dates.push(date);
-    }
     console.log(dates);
   }
 
