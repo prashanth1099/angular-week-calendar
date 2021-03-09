@@ -37,8 +37,8 @@ import {
         background-color: rgba(2, 117, 216, 0.5);
       }
 
-      .disabled .custom-day{
-        color: red
+      .disabled .custom-day {
+        color: red;
       }
     `
   ]
@@ -51,20 +51,26 @@ export class NgbdDatepickerRange {
   today: NgbDate;
   toDate: NgbDate | null = null;
   firstDayOfWeek: number = 1;
-  selectMultipleWeeks: boolean = false;
+  selectMultipleWeeks: boolean = true;
   showWeekNumbers: boolean = true;
   numberOfMonthsToEnable: number = 1;
   weekNumbers: string[] = [];
 
-  constructor(@Inject(NgbCalendar) private calendar: NgbCalendar,
-  private config: NgbDatepickerConfig) {
+  constructor(
+    private calendar: NgbCalendar,
+    private config: NgbDatepickerConfig
+  ) {
     this.fromDate = calendar.getToday();
     this.today = calendar.getToday();
     this.selectWeek(this.fromDate);
+
     config.markDisabled = (date: NgbDateStruct, current) => {
-      let previousMonth = this.calendar.getPrev(this.today, "m", this.numberOfMonthsToEnable);
-      if(NgbDate.from(previousMonth).before(date))
-      {
+      let previousMonth = this.calendar.getPrev(
+        this.today,
+        "m",
+        this.numberOfMonthsToEnable
+      );
+      if (NgbDate.from(previousMonth).before(date)) {
         return false;
       }
       return true;
@@ -76,17 +82,13 @@ export class NgbdDatepickerRange {
     let constructDate = this.buildDate(dateObject);
 
     if (!this.selectMultipleWeeks) {
-      // Get the weekDayNumber and reduce the number to select the date from firstDayOfWeek
-      // if zero(sunday) then reduce -6
+      //Single week selection
       this.fromDate = this.constructStartDate(dateObject)(constructDate);
-
-      // Get the weekDayNumber and reduce the number to select the date
-      // if zero(sunday) then reduce 0
       this.toDate = this.constructEndDate(dateObject)(constructDate);
       this.weekNumberGenerator();
     } else {
+      //Multiple week selection
       if (!this.fromDate && !this.toDate) {
-        //this.fromDate = date;
         this.fromDate = this.constructStartDate(dateObject)(constructDate);
       } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
         const startDate = new Date(
@@ -129,7 +131,7 @@ export class NgbdDatepickerRange {
     if (dates.length > 0) {
       for (let date of dates) {
         this.weekNumbers.push(
-          "week " + this.calendar.getWeekNumber(date, this.firstDayOfWeek)
+          " week-" + this.calendar.getWeekNumber(date, this.firstDayOfWeek)
         );
       }
     }
@@ -192,19 +194,27 @@ export class NgbdDatepickerRange {
     );
   }
 
-  previousWeek()
-  {
-    console.log(this.fromDate);
-    console.log(this.toDate);
+  previousWeek() {
     this.toDate = this.calendar.getPrev(this.fromDate, "d", 1);
-    this.fromDate = this.calendar.getPrev(this.fromDate, "d", this.calendar.getDaysPerWeek());
+    this.fromDate = this.calendar.getPrev(
+      this.fromDate,
+      "d",
+      this.calendar.getDaysPerWeek()
+    );
     this.weekNumberGenerator();
   }
 
-  nextWeek()
-  {
-    this.fromDate = this.calendar.getNext(this.fromDate, "d", this.calendar.getDaysPerWeek());
-    this.toDate = this.calendar.getNext(this.fromDate, "d", this.calendar.getDaysPerWeek()-1);
+  nextWeek() {
+    this.fromDate = this.calendar.getNext(
+      this.fromDate,
+      "d",
+      this.calendar.getDaysPerWeek()
+    );
+    this.toDate = this.calendar.getNext(
+      this.fromDate,
+      "d",
+      this.calendar.getDaysPerWeek() - 1
+    );
     this.weekNumberGenerator();
   }
 }
