@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnChanges, SimpleChanges } from "@angular/core";
 import { NgbDate, NgbCalendar } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
@@ -39,43 +39,83 @@ export class NgbdDatepickerRange {
 
   fromDate: NgbDate;
   toDate: NgbDate | null = null;
+  firstDayOfWeek: number = 1;
+  selectMultipleWeeks: boolean = true;
+  counter: number = 0;
+  showWeekNumbers: boolean = true;
 
-  constructor(calendar: NgbCalendar) {
+  constructor(private calendar: NgbCalendar) {
     this.fromDate = calendar.getToday();
     this.selectWeek(this.fromDate);
-    // this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
-
-  /*  onDateSelection(date: NgbDate) {
-    if (!this.fromDate && !this.toDate) {
-      this.fromDate = date;
-    } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
-      this.toDate = date;
-    } else {
-      this.toDate = null;
-      this.fromDate = date;
-    }
-    console.log(this.toDate);
-    let toDate = new Date(this.toDate.year, this.toDate.month - 1, this.toDate.day);
-    
-  }*/
 
   selectWeek(date: NgbDate) {
-    const d = new Date(date.year, date.month - 1, date.day);
-    let constructDate = this.buildDate(d);
+    const dateObject = new Date(date.year, date.month - 1, date.day);
+    let constructDate = this.buildDate(dateObject);
 
-    // Get the weekDayNumber and reduce the number to select the date from monday
-    // if zero(sunday) then reduce -6
-    let startFromMonday = d.getDay() != 0 ? 1 - d.getDay() : -6;
-    this.fromDate = constructDate(startFromMonday);
+    if (!this.selectMultipleWeeks) {
+      // Get the weekDayNumber and reduce the number to select the date from firstDayOfWeek
+      // if zero(sunday) then reduce -6
+      this.fromDate = this.constructStartDate(dateObject)(constructDate);
 
-    // Get the weekDayNumber and reduce the number to select the date from sunday
-    // if zero(sunday) then reduce 0
-    let endAtSunday = d.getDay() != 0 ? 7 - d.getDay() : 0;
-    this.toDate = constructDate(endAtSunday);
+      // Get the weekDayNumber and reduce the number to select the date
+      // if zero(sunday) then reduce 0
+      this.toDate = this.constructEndDate(dateObject)(constructDate);
+      //this.weekNumberGenerator().next();
+    } else {
+      if (!this.fromDate && !this.toDate) {
+        //this.fromDate = date;
+        this.fromDate = this.constructStartDate(dateObject)(constructDate);
+      } else if (this.fromDate && !this.toDate && date.after(this.fromDate)) {
+        const startDate = new Date(
+          this.fromDate.year,
+          this.fromDate.month - 1,
+          this.fromDate.day
+        );
+        let buildStartDate = this.buildDate(startDate);
+        this.fromDate = this.constructStartDate(startDate)(buildStartDate);
+
+        //this.toDate = date;
+        this.toDate = this.constructEndDate(dateObject)(constructDate);
+      } else {
+        this.toDate = null;
+        this.fromDate = date;
+      }
+      this.weekNumberGenerator();
+    }
   }
 
-  buildDate(date) {
+  weekNumberGenerator() {
+    console.log(this.fromDate);
+    let startDate = this.fromDate;
+    let endDate = this.toDate;
+    let dates = [];
+    while(!(startDate.equals(endDate)))
+    {
+       let date = this.calendar.getNext(startDate, "d", 1);
+       startDate = date;
+       dates.push(date);
+    }
+    console.log(dates);
+  }
+
+  constructStartDate(date: Date) {
+    let firstDayOfWeek = this.firstDayOfWeek;
+    return function(constructDate) {
+      let startDay = date.getDay() != 0 ? firstDayOfWeek - date.getDay() : -6;
+      return constructDate(startDay);
+    };
+  }
+
+  constructEndDate(date: Date) {
+    let firstDayOfWeek = this.firstDayOfWeek;
+    return function(constructDate) {
+      let endDay = date.getDay() != 0 ? firstDayOfWeek + 6 - date.getDay() : 0;
+      return constructDate(endDay);
+    };
+  }
+
+  buildDate(date: Date) {
     return function(number) {
       let day = date.getDate() + number;
       const dateObject = new Date(date.getFullYear(), date.getMonth(), day);
@@ -114,21 +154,5 @@ export class NgbdDatepickerRange {
       this.isInside(date) ||
       this.isHovered(date)
     );
-  }
-
-  isDisabled(date: NgbDate) {
-    const d = new Date(date.year, date.month - 1, date.day);
-    console.log(typeof d.getDay());
-    switch (d.getDay()) {
-      case 0:
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-        return true;
-      default:
-        return false;
-    }
   }
 }

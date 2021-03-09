@@ -1,6 +1,8 @@
 <p>Example of the range selection</p>
 
-<ngb-datepicker #dp (dateSelect)="selectWeek($event)" [displayMonths]="1" [dayTemplate]="t">
+<ngb-datepicker #dp (dateSelect)="selectWeek($event)" [displayMonths]="1" [dayTemplate]="t"
+  [firstDayOfWeek]=firstDayOfWeek
+  [showWeekNumbers]=showWeekNumbers>
 </ngb-datepicker>
 
 <ng-template #t let-date let-focused="focused" let-disabled="disabled">
@@ -18,3 +20,4 @@
 
 <pre>From: {{ fromDate | json }} </pre>
 <pre>To: {{ toDate | json }} </pre>
+<pre>From: {{ fromDate | json }} </pre>
