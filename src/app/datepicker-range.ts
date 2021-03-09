@@ -194,8 +194,10 @@ export class NgbdDatepickerRange {
 
   previousWeek()
   {
+    console.log(this.fromDate);
+    console.log(this.toDate);
+    this.toDate = this.calendar.getPrev(this.fromDate, "d", 1);
     this.fromDate = this.calendar.getPrev(this.fromDate, "d", this.calendar.getDaysPerWeek());
-    this.toDate = this.calendar.getPrev(this.fromDate, "d", this.calendar.getDaysPerWeek()-1);
     //this.weekNumberGenerator();
   }
 
