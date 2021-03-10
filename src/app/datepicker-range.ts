@@ -52,7 +52,6 @@ export class NgbdDatepickerRange {
   toDate: NgbDate | null = null;
   firstDayOfWeek: number = 1;
   selectMultipleWeeks: boolean = true;
-  showWeekNumbers: boolean = true;
   numberOfMonthsToEnable: number = 6;
   weekNumbers: string[] = [];
 
