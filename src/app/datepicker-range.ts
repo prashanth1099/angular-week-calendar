@@ -53,7 +53,7 @@ export class NgbdDatepickerRange {
   firstDayOfWeek: number = 1;
   selectMultipleWeeks: boolean = true;
   showWeekNumbers: boolean = true;
-  numberOfMonthsToEnable: number = 1;
+  numberOfMonthsToEnable: number = 6;
   weekNumbers: string[] = [];
 
   constructor(
@@ -131,7 +131,7 @@ export class NgbdDatepickerRange {
     if (dates.length > 0) {
       for (let date of dates) {
         this.weekNumbers.push(
-          " week-" + this.calendar.getWeekNumber(date, this.firstDayOfWeek)
+          "week-" + this.calendar.getWeekNumber(date, this.firstDayOfWeek)
         );
       }
     }
